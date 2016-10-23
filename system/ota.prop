@@ -1,0 +1,6 @@
+{
+    "noflash": "true",
+    "rebootcmd": "reboot recovery",
+    "system_sdpath": "<< path to external storage in OS if it's non-standard >>",
+    "recovery_sdpath": "<< path to external storage in recovery if it's non-standard >>"
+}

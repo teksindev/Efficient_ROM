@@ -1,0 +1,10 @@
+<b><#selectbg_g>Efficient ROM 3.5 - Stable - 18 september 2016</#></b>
+
+<*>Fixed that sometimes magisk doesn't root</*>
+
+
+
+
+
+
+

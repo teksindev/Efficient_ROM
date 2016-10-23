@@ -1,0 +1,26 @@
+#!/system/bin/sh
+
+mount -o remount,rw /
+mount -o remount,rw rootfs
+mount -o remount,rw /system
+mount -o remount,rw /data
+mount -o remount,rw /cache
+busybox mount -o remount,rw /
+busybox mount -o remount,rw rootfs
+busybox mount -o remount,rw /system
+busybox mount -o remount,rw /data
+busybox mount -o remount,rw /cache
+
+if [ -e /system/etc/teksinoptimizer/trim.log ]; then
+rm /system/etc/teksinoptimizer/trim.log
+fi
+
+TD=/system/etc/teksinoptimizer/trim.log
+echo "* $(date +"%m-%d-%Y %r") *" >> $TD
+echo "*In /data*" >> $TD
+fstrim -v /data >> $TD
+echo "*In /cache*" >> $TD
+fstrim -v /cache >> $TD
+echo "*In /system*" >> $TD
+fstrim -v /system >> $TD
+echo "" >> $TD

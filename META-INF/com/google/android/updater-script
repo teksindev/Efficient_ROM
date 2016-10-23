@@ -1,0 +1,1770 @@
+unmount("/system");
+unmount("/data");
+unmount("/cache");
+unmount("/preload");
+set_progress(0.010000);
+ui_print("**********************************************");
+ui_print("- Efficient ROM 3.4 - Stable - Stock Feeling");
+ui_print("- Powered by Efficient Kernel Stock+");
+ui_print("- For Samsung Galaxy S7 and S7 Edge");
+ui_print("- Swiss Made");
+ui_print("- Developed by Teksin");
+ui_print("**********************************************");
+
+format("ext4", "EMMC", "/dev/block/platform/155a0000.ufs/by-name/SYSTEM", "0", "/system");
+sleep(2);
+mount("ext4", "EMMC", "/dev/block/platform/155a0000.ufs/by-name/SYSTEM", "/system");
+mount("ext4", "EMMC", "/dev/block/platform/155a0000.ufs/by-name/USERDATA", "/data");
+mount("ext4", "EMMC", "/dev/block/platform/155a0000.ufs/by-name/CACHE", "/cache");
+mount("ext4", "EMMC", "/dev/block/platform/155a0000.ufs/by-name/HIDDEN", "/preload");
+mount("ext4", "EMMC", "/dev/block/platform/155a0000.ufs/by-name/EFS", "/efs");
+ui_print("## Mounting system...");
+run_program("/sbin/busybox", "mount", "/system");
+ui_print("## Mounting data...");
+run_program("/sbin/busybox", "mount", "/data");
+ui_print("## Mounting cache...");
+run_program("/sbin/busybox", "mount", "/cache");
+ui_print("## Mounting preload...");
+run_program("/sbin/busybox", "mount", "/preload");
+ui_print("## Mounting efs...");
+run_program("/sbin/busybox", "mount", "/efs");
+set_progress(0.200000);
+
+
+#Wipe options
+if file_getprop("/tmp/aroma/wipe.prop","selected.1") == "1" then
+		ui_print("## Your wipe choice : Full wipe");
+		ui_print("");
+		delete_recursive("/system");
+		delete_recursive("/cache");
+		package_extract_file("Efficient/scripts/wipedata.sh", "/tmp/wipedata.sh"); 
+		set_perm(0, 0, 0777, "/tmp/wipedata.sh");
+		run_program("/sbin/busybox", "sh", "/tmp/wipedata.sh");
+		delete_recursive("/tmp/scripts");
+		delete_recursive("/data/dalvik-cache");
+endif;
+
+if file_getprop("/tmp/aroma/wipe.prop","selected.1") == "2" then
+		ui_print("## Your wipe choice : System wipe");
+		ui_print("");
+		delete_recursive("/system");
+		delete_recursive("/cache");
+		delete_recursive("/data/dalvik-cache");
+		
+endif;
+
+if file_getprop("/tmp/aroma/wipe.prop","selected.1") == "3" then
+		ui_print("## Your wipe choice : No wipe");
+		ui_print("");
+endif;
+set_progress(0.300000);
+
+#Installing system
+ui_print("## Installing Efficient ROM...");
+package_extract_dir("system", "/system");
+
+set_progress(0.350000);
+
+package_extract_dir("data", "/data");
+
+set_progress(0.370000);
+
+package_extract_dir("sdcard", "/sdcard");
+
+set_progress(0.390000);
+
+#AirMessage
+if file_getprop("/tmp/aroma/floatm.prop","selected.1") == "1"
+	then
+		ui_print("++ Installing Floating Messages...");
+		package_extract_dir("Efficient/mods/FM/yes/system", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/floatm.prop","selected.1") == "2"
+	then
+		ui_print("-- Removing Floating Messages...");
+		package_extract_dir("Efficient/mods/FM/no/system", "/system");
+endif;
+
+#Camera Mod
+if file_getprop("/tmp/aroma/camera.prop","selected.2") == "1" then
+	ui_print("++ Installing S7 Modded Camera... ");
+	package_extract_dir("Efficient/mods/camera", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/camera.prop","selected.2") == "2" then
+	ui_print("++ Installing S7 Stock Camera...");
+endif;
+
+#battery 
+if file_getprop("/tmp/aroma/battery.prop","item.1.1") == "0" then
+		ui_print("-- Deleting NapTime...");
+		delete_recursive("/system/app/NapTime");
+endif;
+if file_getprop("/tmp/aroma/battery.prop","item.1.2") == "0" then
+		ui_print("-- Deleting Battery Calibration...");
+		delete_recursive("/system/app/BatteryCalibration");
+endif;
+if file_getprop("/tmp/aroma/battery.prop","item.1.3") == "0" then
+		ui_print("-- Deleting Servicely...");
+		delete_recursive("/system/app/Servicely");
+endif;
+if file_getprop("/tmp/aroma/battery.prop","item.1.4") == "0" then
+		ui_print("-- Deleting BetterBatteryStats...");
+		delete_recursive("/system/priv-app/BetterBatteryStats");
+endif;
+
+if file_getprop("/tmp/aroma/battery.prop","item.1.1") == "1" then
+		ui_print("++ Adding NapTime...");
+endif;
+if file_getprop("/tmp/aroma/battery.prop","item.1.2") == "1" then
+		ui_print("++ Adding Battery Calibration...");
+endif;
+if file_getprop("/tmp/aroma/battery.prop","item.1.3") == "1" then
+		ui_print("++ Adding Servicely...");
+endif;
+if file_getprop("/tmp/aroma/battery.prop","item.1.4") == "1" then
+		ui_print("++ Adding BetterBatteryStats...");
+endif;
+
+
+#apps 
+if file_getprop("/tmp/aroma/addons.prop","item.1.1") == "0" then
+		ui_print("-- Deleting Kernel Adiutor...");
+		delete_recursive("/system/app/KernelAdiutor");
+endif;
+if file_getprop("/tmp/aroma/addons.prop","item.1.2") == "0" then
+		ui_print("-- Deleting AdAway...");
+		delete_recursive("/system/app/AdAway");
+endif;
+if file_getprop("/tmp/aroma/addons.prop","item.1.3") == "0" then
+		ui_print("-- Deleting Lucky Patcher...");
+		delete_recursive("/system/app/Lucky");
+endif;
+if file_getprop("/tmp/aroma/addons.prop","item.1.4") == "0" then
+		ui_print("-- Deleting FX Explorer...");
+		delete_recursive("/system/app/FXExplorer");
+endif;
+if file_getprop("/tmp/aroma/addons.prop","item.1.5") == "0" then
+		ui_print("-- Deleting Telegram...");
+		delete_recursive("/system/app/Telegram");
+endif;
+if file_getprop("/tmp/aroma/addons.prop","item.1.5") == "0" then
+		ui_print("-- Deleting Termux...");
+		delete_recursive("/system/app/Termux");
+endif;
+#deletapps
+if file_getprop("/tmp/aroma/addons.prop","item.1.1") == "1" then
+		ui_print("++ Adding Kernel Adiutor...");
+endif;
+if file_getprop("/tmp/aroma/addons.prop","item.1.2") == "1" then
+		ui_print("++ Adding AdAway...");
+endif;
+if file_getprop("/tmp/aroma/addons.prop","item.1.3") == "1" then
+		ui_print("++ Adding Lucky Patcher...");
+endif;
+if file_getprop("/tmp/aroma/addons.prop","item.1.4") == "1" then
+		ui_print("++ Adding FX Explorer...");
+endif;
+if file_getprop("/tmp/aroma/addons.prop","item.1.5") == "1" then
+		ui_print("++ Adding Telegram...");
+endif;
+if file_getprop("/tmp/aroma/addons.prop","item.1.6") == "1" then
+		ui_print("++ Adding Termux...");
+endif;
+
+#soundmod
+if file_getprop("/tmp/aroma-data/speaker.prop","selected.1") == "2" then
+		ui_print("## Installing Dual Speaker MOD level 0...");
+		package_extract_dir("Efficient/sound/lvl0/system", "/system");
+endif;
+
+if file_getprop("/tmp/aroma-data/speaker.prop","selected.1") == "3" then
+		ui_print("## Installing Dual Speaker MOD level 1...");
+		package_extract_dir("Efficient/sound/lvl1/system", "/system");
+endif;
+if file_getprop("/tmp/aroma-data/speaker.prop","selected.1") == "4" then
+		ui_print("## Installing Dual Speaker MOD level 2...");
+		package_extract_dir("Efficient/sound/lvl2/system", "/system");
+endif;
+if file_getprop("/tmp/aroma-data/speaker.prop","selected.1") == "5" then
+		ui_print("## Installing Dual Speaker MOD level 3...");
+		package_extract_dir("Efficient/sound/lvl3/system", "/system");
+endif;
+if file_getprop("/tmp/aroma-data/speaker.prop","selected.1") == "6" then
+		ui_print("## Installing Volume MOD level 1...");
+		package_extract_dir("Efficient/sound/vol1/system", "/system");
+endif;
+if file_getprop("/tmp/aroma-data/speaker.prop","selected.1") == "7" then
+		ui_print("## Installing Volume MOD level 2...");
+		package_extract_dir("Efficient/sound/vol2/system", "/system");
+endif;
+if file_getprop("/tmp/aroma-data/speaker.prop","selected.1") == "8" then
+		ui_print("## Installing Volume MOD level 3...");
+		package_extract_dir("Efficient/sound/vol3/system", "/system");
+endif;
+
+#Emoji
+if
+	file_getprop("/tmp/aroma/emoji.prop","selected.1") == "1"
+	then
+		ui_print("## Installing stock emoji...");
+		package_extract_dir("Efficient/emoji/stock", "/system/fonts");
+endif;
+if
+	file_getprop("/tmp/aroma/emoji.prop","selected.1") == "2"
+	then
+		ui_print("## Installing iOS emoji...");
+		package_extract_dir("Efficient/emoji/ios", "/system/fonts");
+endif;
+
+#Debloater
+if file_getprop("/tmp/aroma/debloat.prop","item.1.1") == "1" then
+    ui_print("-- Deleting AllShare...");
+	delete_recursive("/system/app/AllShareCastPlayer");
+	delete_recursive("/system/app/AllshareFileShareServer");
+	delete_recursive("/system/app/AllshareFileShare");
+	delete_recursive("/system/app/AllshareFileShareClient");
+	delete_recursive("/system/app/AllshareMediaShare");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.2") == "1" then
+    ui_print("-- Deleting ANT files...");
+	delete_recursive("/system/app/AntHalService");
+	delete_recursive("/system/app/ANTPlusPlugins");
+	delete_recursive("/system/app/ANTPlusTest");
+	delete_recursive("/system/app/ANTRadioService");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.3") == "1" then
+    ui_print("-- Deleting BriefingPanel...");
+	delete_recursive("/system/app/BriefingPanel");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.4") == "1" then
+    ui_print("-- Deleting AssistantMenu...");
+	delete_recursive("/system/app/AssistantMenu_M");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.5") == "1" then
+    ui_print("-- Deleting BasicDreams...");
+	delete_recursive("/system/app/BasicDreams");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.6") == "1" then
+    ui_print("-- Deleting BBCAgent...");
+	delete_recursive("/system/app/BBCAgent");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.7") == "1" then
+    ui_print("-- Deleting BookmarkProvider...");
+	delete_recursive("/system/app/BookmarkProvider");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.8") == "1" then
+    ui_print("-- Deleting CarmodeStub...");
+	delete_recursive("/system/app/CarmodeStub");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.9") == "1" then
+    ui_print("-- Deleting ClockPackage...");
+	delete_recursive("/system/app/ClockPackage_M");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.10") == "1" then
+    ui_print("-- Deleting CloudGateway...");
+	delete_recursive("/system/app/CloudGateway");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.11") == "1" then
+    ui_print("-- Deleting CnnPanel...");
+	delete_recursive("/system/app/CnnPanel");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.12") == "1" then
+    ui_print("-- Deleting ColorBlind...");
+	delete_recursive("/system/app/ColorBlind_M");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.13") == "1" then
+    ui_print("-- Deleting ControlTV...");
+	delete_recursive("/system/app/ControlTV");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.14") == "1" then
+    ui_print("-- Deleting DictDiotek...");
+	delete_recursive("/system/app/DictDiotek");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.15") == "1" then
+    ui_print("-- Deleting EasyLauncher...");
+	delete_recursive("/system/priv-app/EasyLauncher2_Zero");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.16") == "1" then
+    ui_print("-- Deleting GearManager...");
+	delete_recursive("/system/app/GearManagerStub");
+	delete_recursive("/system/priv-app/GearManager");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.17") == "1" then
+    ui_print("-- Deleting Gmail...");
+	delete_recursive("/system/app/Gmail2");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.18") == "1" then
+    ui_print("-- Deleting GoogleTTS...");
+	delete_recursive("/system/app/GoogleTTS");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.19") == "1" then
+    ui_print("-- Deleting MirrorLink...");
+	delete_recursive("/system/app/MirrorLink");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.20") == "1" then
+    ui_print("-- Deleting MobilePrintSvc_Samsung...");
+	delete_recursive("/system/app/MobilePrintSvc_Samsung");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.21") == "1" then
+    ui_print("-- Deleting PartnerBookmarksProvider...");
+	delete_recursive("/system/app/PartnerBookmarksProvider");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.22") == "1" then
+    ui_print("-- Deleting SafetyInformation...");
+	delete_recursive("/system/app/SafetyInformation");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.23") == "1" then
+    ui_print("-- Deleting SecMemo3...");
+	delete_recursive("/system/app/SecMemo3");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.24") == "1" then
+    ui_print("-- Deleting SPlanner_M...");
+	delete_recursive("/system/app/SPlanner_M");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.25") == "1" then
+    ui_print("-- Deleting STalkback...");
+	delete_recursive("/system/app/STalkback");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.26") == "1" then
+    ui_print("-- Deleting Weather2016...");
+	delete_recursive("/system/app/Weather2016");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.27") == "1" then
+    ui_print("-- Deleting WeatherWidget2016...");
+	delete_recursive("/system/app/WeatherWidget2016");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.28") == "1" then
+    ui_print("-- Deleting ChromeCustomizations...");
+	delete_recursive("/system/app/ChromeCustomizations");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.29") == "1" then
+    ui_print("-- Deleting SamsungMagnifier3...");
+	delete_recursive("/system/priv-app/SamsungMagnifier3");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.30") == "1" then
+    ui_print("-- Deleting SecCalculator_M...");
+	delete_recursive("/system/priv-app/SecCalculator_M");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.31") == "1" then
+    ui_print("-- Deleting SecEmail_M...");
+	delete_recursive("/system/priv-app/SecEmail_M");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.32") == "1" then
+    ui_print("-- Deleting SecMyFiles...");
+	delete_recursive("/system/priv-app/SecMyFiles");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.33") == "1" then
+    ui_print("-- Deleting SVoice_1.0...");
+	delete_recursive("/system/priv-app/SVoice_1.0");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.34") == "1" then
+    ui_print("-- Deleting SVoiceLang_SpanishPack_ES_1.0...");
+	delete_recursive("/system/priv-app/SVoiceLang_SpanishPack_ES_1.0");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.35") == "1" then
+    ui_print("-- Deleting SVoiceLang_RussianPack_RU_1.0...");
+	delete_recursive("/system/priv-app/SVoiceLang_RussianPack_RU_1.0");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.36") == "1" then
+    ui_print("-- Deleting SVoiceLang_FrenchPack_1.0...");
+	delete_recursive("/system/priv-app/SVoiceLang_FrenchPack_1.0");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.37") == "1" then
+    ui_print("-- Deleting SVoiceLang_GermanPack_DE_1.0...");
+	delete_recursive("/system/priv-app/SVoiceLang_GermanPack_DE_1.0");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.38") == "1" then
+    ui_print("-- Deleting SVoiceLang_EnglishPack_US_1.0...");
+	delete_recursive("/system/priv-app/SVoiceLang_EnglishPack_US_1.0");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.39") == "1" then
+    ui_print("-- Deleting SVoiceLang_EnglishPack_GB_1.0...");
+	delete_recursive("/system/priv-app/SVoiceLang_EnglishPack_GB_1.0");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.40") == "1" then
+    ui_print("-- Deleting SVoiceLang_ItalianPack_IT_1.0...");
+	delete_recursive("/system/priv-app/SVoiceLang_ItalianPack_IT_1.0");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.41") == "1" then
+    ui_print("-- Deleting SVoicePLM_1.0...");
+	delete_recursive("/system/priv-app/SVoicePLM_1.0");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.42") == "1" then
+    ui_print("-- Deleting VoiceNote_4.0...");
+	delete_recursive("/system/priv-app/VoiceNote_4.0");
+endif;
+
+if file_getprop("/tmp/aroma/debloat.prop","item.1.43") == "1" then
+    ui_print("-- Deleting VRSetupWizardStub...");
+	delete_recursive("/system/priv-app/VRSetupWizardStub");
+endif;
+
+#Debloater2
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.1") == "1" then
+    ui_print("-- Deleting Kies...");
+	delete_recursive("/system/priv-app/Kies");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.2") == "1" then
+    ui_print("-- Deleting FidoUafClient...");
+	delete_recursive("/system/priv-app/FidoUafClient");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.3") == "1" then
+    ui_print("-- Deleting SmartSwitch files...");
+	delete_recursive("/system/priv-app/SmartSwitchAgent");
+	delete_recursive("/system/priv-app/wssyncmlnps2");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.4") == "1" then
+    ui_print("-- Deleting UcsPinpad...");
+	delete_recursive("/system/priv-app/UcsPinpad");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.5") == "1" then
+    ui_print("-- Deleting intelligenceservice2...");
+	delete_recursive("/system/priv-app/intelligenceservice2");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.6") == "1" then
+    ui_print("-- Deleting Fresco_1.0...");
+	delete_recursive("/system/priv-app/Fresco_1.0");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.7") == "1" then
+    ui_print("-- Deleting FaceService...");
+	delete_recursive("/system/priv-app/FaceService");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.8") == "1" then
+    ui_print("-- Deleting EnhanceService...");
+	delete_recursive("/system/priv-app/EnhanceService");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.9") == "1" then
+    ui_print("-- Deleting UIBCVirtualSoftkey...");
+	delete_recursive("/system/priv-app/UIBCVirtualSoftkey");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.10") == "1" then
+    ui_print("-- Deleting SamsungCloud...");
+	delete_recursive("/system/priv-app/SamsungCloud");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.11") == "1" then
+    ui_print("-- Deleting SapaAudioConnectionService...");
+	delete_recursive("/system/app/SapaAudioConnectionService");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.12") == "1" then
+    ui_print("-- Deleting CocktailQuickTool...");
+	delete_recursive("/system/app/CocktailQuickTool");
+endif;
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.13") == "1" then
+    ui_print("-- Deleting Stk...");
+	delete_recursive("/system/app/Stk");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.14") == "1" then
+    ui_print("-- Deleting Stk2...");
+	delete_recursive("/system/app/Stk2");
+endif;
+
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.15") == "1" then
+    ui_print("-- Deleting SCPMClient...");
+	delete_recursive("/system/app/SCPMClient");
+endif;
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.16") == "1" then
+    ui_print("-- Deleting SLocation...");
+	delete_recursive("/system/app/SLocation");
+endif;
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.17") == "1" then
+    ui_print("-- Deleting ESEServiceAgent...");
+	delete_recursive("/system/app/ESEServiceAgent");
+endif;
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.18") == "1" then
+    ui_print("-- Deleting BCService...");
+	delete_recursive("/system/app/BCService");
+endif;
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.19") == "1" then
+    ui_print("-- Deleting ApexService...");
+	delete_recursive("/system/app/ApexService");
+endif;
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.20") == "1" then
+    ui_print("-- Deleting SBrowserEdge...");
+	delete_recursive("/system/app/SBrowserEdge");
+endif;
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.21") == "1" then
+    ui_print("-- Deleting MobileTrackerEngineTwo...");
+	delete_recursive("/system/app/MobileTrackerEngineTwo");
+endif;
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.22") == "1" then
+    ui_print("-- Deleting GalaxyApps_3xh...");
+	delete_recursive("/system/priv-app/GalaxyApps_3xh");
+endif;
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.23") == "1" then
+    ui_print("-- Deleting GalaxyLabs...");
+	delete_recursive("/system/priv-app/GalaxyLabs");
+endif;
+if file_getprop("/tmp/aroma/debloat2.prop","item.1.24") == "1" then
+    ui_print("-- Deleting SMusicPicker...");
+	delete_recursive("/system/priv-app/SMusicPicker");
+endif;
+
+set_progress(0.400000);
+
+##GPS
+#Angola
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "1" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Angola/system", "/system");
+
+endif;
+
+#Argentina
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "2" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Argentina/system", "/system");
+
+endif;
+
+#Australia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "3" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Australia/system", "/system");
+
+endif;
+
+#Austria
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "4" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Austria/system", "/system");
+
+endif;
+
+#Bangladesh
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "5" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Bangladesh/system", "/system");
+
+endif;
+
+#Belarus
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "6" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Belarus/system", "/system");
+
+endif;
+
+#Belgium
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "7" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Belgium/system", "/system");
+
+endif;
+
+#Bosnia & Herzegovina
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "8" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Bosnia/system", "/system");
+
+endif;
+
+#Brazil
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "9" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Brazil/system", "/system");
+
+endif;
+
+#Bulgaria
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "10" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Bulgaria/system", "/system");
+
+endif;
+
+#Cambodia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "11" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Cambodia/system", "/system");
+
+endif;
+
+#Canada
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "12" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Canada/system", "/system");
+
+endif;
+
+#Chile
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "13" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Chile/system", "/system");
+
+endif;
+
+#China
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "14" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/China/system", "/system");
+
+endif;
+
+#Costa Rica
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "15" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Costa-Rica/system", "/system");
+
+endif;
+
+#Croatia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "16" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Croatia/system", "/system");
+
+endif;
+
+#Czech Republic
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "17" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Czech-Republic/system", "/system");
+
+endif;
+
+#Denmark
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "18" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Denmark/system", "/system");
+
+endif;
+
+#El Salvador
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "19" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Salvador/system", "/system");
+
+endif;
+
+#Estonia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "20" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Estonia/system", "/system");
+
+endif;
+
+#Finland
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "21" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Finland/system", "/system");
+
+endif;
+
+#France
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "22" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/France/system", "/system");
+
+endif;
+
+#Germany
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "23" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Germany/system", "/system");
+
+endif;
+
+#Greece
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "24" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Greece/system", "/system");
+
+endif;
+
+#Guatemala
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "25" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Guatemala/system", "/system");
+
+endif;
+
+#Hong Kong
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "26" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Hong-Kong/system", "/system");
+
+endif;
+
+#Hungary
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "27" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Hungary/system", "/system");
+
+endif;
+
+#India
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "28" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/India/system", "/system");
+
+endif;
+
+#Indonesia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "29" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Indonesia/system", "/system");
+
+endif;
+
+#Iran
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "30" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Iran/system", "/system");
+
+endif;
+
+#Ireland
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "31" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Ireland/system", "/system");
+
+endif;
+
+#Israel
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "32" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Israel/system", "/system");
+
+endif;
+
+#Italy
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "33" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Italy/system", "/system");
+
+endif;
+
+#Japan
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "34" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Japan/system", "/system");
+
+endif;
+
+#Korea
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "35" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Korea/system", "/system");
+
+endif;
+
+#Kyrgyzstan
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "36" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Kyrgyzstan/system", "/system");
+
+endif;
+
+#Latvia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "37" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Latvia/system", "/system");
+
+endif;
+
+#Lithuania
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "38" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Lithuania/system", "/system");
+
+endif;
+
+#Luxembourg
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "39" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Luxembourg/system", "/system");
+
+endif;
+
+#Macedonia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "40" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Macedonia/system", "/system");
+
+endif;
+
+#Madagascar
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "41" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Madagascar/system", "/system");
+
+endif;
+
+#Malaysia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "42" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Malaysia/system", "/system");
+
+endif;
+
+#Mexico
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "43" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Mexico/system", "/system");
+
+endif;
+
+#Moldova
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "44" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Moldova/system", "/system");
+
+endif;
+
+#Netherlands
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "45" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Netherlands/system", "/system");
+
+endif;
+
+#New Caledonia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "46" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/New-Caledonia/system", "/system");
+
+endif;
+
+#New Zealand
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "47" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/New Zealand/system", "/system");
+
+endif;
+
+#Norway
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "48" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Norway/system", "/system");
+
+endif;
+
+#Oman
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "49" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Oman/system", "/system");
+
+endif;
+
+#Pakistan
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "50" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Pakistan/system", "/system");
+
+endif;
+
+#Panama
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "51" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Panama/system", "/system");
+
+endif;
+
+#Philippines
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "52" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Philippines/system", "/system");
+
+endif;
+
+#Poland
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "53" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Poland/system", "/system");
+
+endif;
+
+#Portugal
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "54" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Portugal/system", "/system");
+
+endif;
+
+#Qatar
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "55" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Qatar/system", "/system");
+
+endif;
+
+#Republic of Serbia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "56" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Serbia/system", "/system");
+
+endif;
+
+#Romania
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "57" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Romania/system", "/system");
+
+endif;
+
+#Russian Federation
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "58" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Russia/system", "/system");
+
+endif;
+
+#Saudi Arabia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "59" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Saudi-Arabia/system", "/system");
+
+endif;
+
+#Singapore
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "60" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Singapore/system", "/system");
+
+endif;
+
+#Slovakia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "61" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Slovakia/system", "/system");
+
+endif;
+
+#Slovenia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "62" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Slovenia/system", "/system");
+
+endif;
+
+#South Africa
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "63" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/South-Africa/system", "/system");
+
+endif;
+
+#Spain
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "64" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Spain/system", "/system");
+
+endif;
+
+#Sri Lanka
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "65" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Srilanka/system", "/system");
+
+endif;
+
+#Sweden
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "66" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Sweden/system", "/system");
+
+endif;
+
+#Switzerland
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "67" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Switzerland/system", "/system");
+
+endif;
+
+#Taiwan
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "68" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Taiwan/system", "/system");
+
+endif;
+
+#Tanzania
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "69" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Tanzania/system", "/system");
+
+endif;
+
+#Thailand
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "70" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Thailand/system", "/system");
+
+endif;
+
+#Turkey
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "71" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Turkey/system", "/system");
+
+endif;
+
+#Ukraine
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "72" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Ukraine/system", "/system");
+
+endif;
+
+#United Arab Emirates
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "73" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/United-Arab-Emirates/system", "/system");
+
+endif;
+
+#United Efficientdom
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "74" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/United-Efficientdom/system", "/system");
+
+endif;
+
+#United States of America
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "75" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/United-States/system", "/system");
+
+endif;
+
+#Uzbekistan
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "76" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Uzbekistan/system", "/system");
+
+endif;
+
+#Venezuela
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "77" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Venezuela/system", "/system");
+
+endif;
+
+#Vietnam
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "78" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Vietnam/system", "/system");
+
+endif;
+
+#Yugoslavia
+if file_getprop("/tmp/aroma/gps.prop","selected.1") == "79" then
+ui_print("## Updating your gps.conf for your country...");
+
+delete("/system/etc/gps.conf");
+ui_print("## Copying new config...");
+package_extract_dir("Efficient/mods/gps/Yugoslavia/system", "/system");
+
+endif;
+#variants
+
+if file_getprop("/tmp/aroma/kernel.prop","selected.1") == "1" then
+     ui_print("## Installing SM-G930F build.prop ...");
+	package_extract_dir("Variant/G930F/system", "/system");
+endif;
+
+#variants
+if file_getprop("/tmp/aroma/kernel.prop","selected.1") == "2" then
+     ui_print("## Installing SM-G935F build.prop ...");
+	package_extract_dir("Variant/G935F/system", "/system");
+endif;
+
+set_progress(0.500000);
+
+ui_print("## Setting SymLink...");
+symlink("app_process64", "/system/bin/app_process");
+symlink("dalvikvm64", "/system/bin/dalvikvm");
+symlink("grep", "/system/bin/egrep");
+symlink("grep", "/system/bin/fgrep");
+symlink("/system/lib64/libGLESv2.so", "/system/lib64/libGLESv3.so");
+symlink("libOpenCL.so.1.1", "/system/vendor/lib64/libOpenCL.so.1");
+symlink("libOpenCL.so.1.1", "/system/vendor/lib/libOpenCL.so.1");
+symlink("libOpenCL.so.1", "/system/vendor/lib64/libOpenCL.so");
+symlink("libOpenCL.so.1", "/system/vendor/lib/libOpenCL.so");
+symlink("Roboto-Bold.ttf", "/system/fonts/DroidSans-Bold.ttf");
+symlink("Roboto-Medium.ttf", "/system/fonts/SECRobotoLight-Bold.ttf");
+symlink("Roboto-Regular.ttf", "/system/fonts/DroidSans.ttf");
+symlink("/system/xbin/busybox", "/system/bin/busybox");
+symlink("Roboto-Regular.ttf", "/system/fonts/SECRobotoLight-Regular.ttf");
+symlink("/system/lib64/libaed.so", "/system/app/AdvSoundDetector2015/lib/arm64/libaed.so");
+symlink("/system/lib64/libdefcontainer_jni.so", "/system/priv-app/DefaultContainerService/lib/arm64/libdefcontainer_jni.so");
+symlink("/system/lib64/libfdb.so", "/system/app/AdvSoundDetector2015/lib/arm64/libfdb.so");
+symlink("/system/lib64/libjni_pacprocessor.so", "/system/app/PacProcessor/lib/arm64/libjni_pacprocessor.so");
+symlink("/system/lib64/libmorpho_panorama_wa_for_viewer.so", "/system/app/Panorama360Viewer_Zero/lib/arm64/libmorpho_panorama_wa_for_viewer.so");
+symlink("/system/lib64/libmorpho_sensor_fusion_for_viewer.so", "/system/app/Panorama360Viewer_Zero/lib/arm64/libmorpho_sensor_fusion_for_viewer.so");
+symlink("/system/lib64/libnfc_nci_jni.so", "/system/app/NfcNci/lib/arm64/libnfc_nci_jni.so");
+symlink("/system/lib64/libprintspooler_jni6.so", "/system/app/SPrintSpooler6/lib/arm64/libprintspooler_jni6.so");
+symlink("/system/lib64/libSamsungBCPP.so", "/system/app/AdvSoundDetector2015/lib/arm64/libSamsungBCPP.so");
+symlink("/system/lib64/libTui.so", "/system/app/TuiService/lib/arm64/libTui.so");
+symlink("/system/lib/libapa_jni.so", "/system/app/SapaMonitor/lib/arm/libapa_jni.so");
+symlink("/system/lib/libasf_fileshareserver.so", "/system/app/AllshareFileShareServer/lib/arm/libasf_fileshareserver.so");
+symlink("/system/lib/libasf_fileshare.so", "/system/app/AllshareFileShare/lib/arm/libasf_fileshare.so");
+symlink("/system/lib/libasf_mediashare.so", "/system/app/AllshareMediaShare/lib/arm/libasf_mediashare.so");
+symlink("/system/lib/libatomcore.so", "/system/priv-app/SelectiveFocusViewer/lib/arm/libatomcore.so");
+symlink("/system/lib/libatomjpeg.so", "/system/priv-app/SelectiveFocusViewer/lib/arm/libatomjpeg.so");
+symlink("/system/lib/libbluetooth_jni.so", "/system/app/Bluetooth/lib/arm/libbluetooth_jni.so");
+symlink("/system/lib/libcommonpawrapper.so", "/system/app/RootPA/lib/arm/libcommonpawrapper.so");
+symlink("/system/lib/libCreateSceneMap.so", "/system/priv-app/VirtualTourViewer_WQHD_Hero/lib/arm/libCreateSceneMap.so");
+symlink("/system/lib/libqjpeg_secvision.so", "/system/priv-app/VirtualTourViewer_WQHD_Hero/lib/arm/libqjpeg_secvision.so");
+symlink("/system/lib/libQualityWrapper_Wallpaper.so", "/system/priv-app/WallpaperCompression/lib/arm/libQualityWrapper_Wallpaper.so");
+symlink("/system/lib/libsecipx.so", "/system/priv-app/SelectiveFocusViewer/lib/arm/libsecipx.so");
+symlink("/system/lib/libSRIB_FocusShot.so", "/system/priv-app/SelectiveFocusViewer/lib/arm/libSRIB_FocusShot.so");
+symlink("/system/lib/libsvoicedll.so", "/system/priv-app/SVoice_1.0/lib/arm/libsvoicedll.so");
+symlink("/system/lib/libsvoicedll.so", "/system/priv-app/SVoicePLM_1.0/lib/arm/libsvoicedll.so");
+symlink("toolbox", "/system/bin/dd");
+symlink("toolbox", "/system/bin/df");
+symlink("toolbox", "/system/bin/du");
+symlink("toolbox", "/system/bin/getevent");
+symlink("toolbox", "/system/bin/iftop");
+symlink("toolbox", "/system/bin/ioctl");
+symlink("toolbox", "/system/bin/ionice");
+symlink("toolbox", "/system/bin/log");
+symlink("toolbox", "/system/bin/ls");
+symlink("toolbox", "/system/bin/lsof");
+symlink("toolbox", "/system/bin/mount");
+symlink("toolbox", "/system/bin/nandread");
+symlink("toolbox", "/system/bin/newfs_msdos");
+symlink("toolbox", "/system/bin/prlimit");
+symlink("toolbox", "/system/bin/ps");
+symlink("toolbox", "/system/bin/renice");
+symlink("toolbox", "/system/bin/sendevent");
+symlink("toolbox", "/system/bin/start");
+symlink("toolbox", "/system/bin/stop");
+symlink("toolbox", "/system/bin/top");
+symlink("toolbox", "/system/bin/uptime");
+symlink("toolbox", "/system/bin/watchprops");
+symlink("toybox", "/system/bin/acpi");
+symlink("toybox", "/system/bin/basename");
+symlink("toybox", "/system/bin/blockdev");
+symlink("toybox", "/system/bin/bzcat");
+symlink("toybox", "/system/bin/cal");
+symlink("toybox", "/system/bin/cat");
+symlink("toybox", "/system/bin/chcon");
+symlink("toybox", "/system/bin/chgrp");
+symlink("toybox", "/system/bin/chmod");
+symlink("toybox", "/system/bin/chown");
+symlink("toybox", "/system/bin/chroot");
+symlink("toybox", "/system/bin/cksum");
+symlink("toybox", "/system/bin/clear");
+symlink("toybox", "/system/bin/cmp");
+symlink("toybox", "/system/bin/comm");
+symlink("toybox", "/system/bin/cp");
+symlink("toybox", "/system/bin/cpio");
+symlink("toybox", "/system/bin/cut");
+symlink("toybox", "/system/bin/date");
+symlink("toybox", "/system/bin/dirname");
+symlink("toybox", "/system/bin/dmesg");
+symlink("toybox", "/system/bin/dos2unix");
+symlink("toybox", "/system/bin/echo");
+symlink("toybox", "/system/bin/env");
+symlink("toybox", "/system/bin/expand");
+symlink("toybox", "/system/bin/expr");
+symlink("toybox", "/system/bin/fallocate");
+symlink("toybox", "/system/bin/false");
+symlink("toybox", "/system/bin/find");
+symlink("toybox", "/system/bin/free");
+symlink("toybox", "/system/bin/getenforce");
+symlink("toybox", "/system/bin/getprop");
+symlink("toybox", "/system/bin/groups");
+symlink("toybox", "/system/bin/head");
+symlink("toybox", "/system/bin/hostname");
+symlink("toybox", "/system/bin/hwclock");
+symlink("toybox", "/system/bin/id");
+symlink("toybox", "/system/bin/ifconfig");
+symlink("toybox", "/system/bin/inotifyd");
+symlink("toybox", "/system/bin/insmod");
+symlink("toybox", "/system/bin/kill");
+symlink("toybox", "/system/bin/ln");
+symlink("toybox", "/system/bin/load_policy");
+symlink("toybox", "/system/bin/logname");
+symlink("toybox", "/system/bin/losetup");
+symlink("toybox", "/system/bin/lsmod");
+symlink("toybox", "/system/bin/lsusb");
+symlink("toybox", "/system/bin/md5sum");
+symlink("toybox", "/system/bin/mkdir");
+symlink("toybox", "/system/bin/mknod");
+symlink("toybox", "/system/bin/mkswap");
+symlink("toybox", "/system/bin/mktemp");
+symlink("toybox", "/system/bin/modinfo");
+symlink("toybox", "/system/bin/more");
+symlink("toybox", "/system/bin/mountpoint");
+symlink("toybox", "/system/bin/mv");
+symlink("toybox", "/system/bin/netstat");
+symlink("toybox", "/system/bin/nice");
+symlink("toybox", "/system/bin/nl");
+symlink("toybox", "/system/bin/nohup");
+symlink("toybox", "/system/bin/od");
+symlink("toybox", "/system/bin/paste");
+symlink("toybox", "/system/bin/patch");
+symlink("toybox", "/system/bin/pgrep");
+symlink("toybox", "/system/bin/pidof");
+symlink("toybox", "/system/bin/pkill");
+symlink("toybox", "/system/bin/pmap");
+symlink("toybox", "/system/bin/printenv");
+symlink("toybox", "/system/bin/printf");
+symlink("toybox", "/system/bin/pwd");
+symlink("toybox", "/system/bin/readlink");
+symlink("toybox", "/system/bin/realpath");
+symlink("toybox", "/system/bin/restorecon");
+symlink("toybox", "/system/bin/rm");
+symlink("toybox", "/system/bin/rmdir");
+symlink("toybox", "/system/bin/rmmod");
+symlink("toybox", "/system/bin/route");
+symlink("toybox", "/system/bin/runcon");
+symlink("toybox", "/system/bin/sed");
+symlink("toybox", "/system/bin/seq");
+symlink("toybox", "/system/bin/setenforce");
+symlink("toybox", "/system/bin/setprop");
+symlink("toybox", "/system/bin/setsid");
+symlink("toybox", "/system/bin/sha1sum");
+symlink("toybox", "/system/bin/sleep");
+symlink("toybox", "/system/bin/sort");
+symlink("toybox", "/system/bin/split");
+symlink("toybox", "/system/bin/stat");
+symlink("toybox", "/system/bin/strings");
+symlink("toybox", "/system/bin/swapoff");
+symlink("toybox", "/system/bin/swapon");
+symlink("toybox", "/system/bin/sync");
+symlink("toybox", "/system/bin/sysctl");
+symlink("toybox", "/system/bin/tac");
+symlink("toybox", "/system/bin/tail");
+symlink("toybox", "/system/bin/tar");
+symlink("toybox", "/system/bin/taskset");
+symlink("toybox", "/system/bin/tee");
+symlink("toybox", "/system/bin/time");
+symlink("toybox", "/system/bin/timeout");
+symlink("toybox", "/system/bin/touch");
+symlink("toybox", "/system/bin/tr");
+symlink("toybox", "/system/bin/true");
+symlink("toybox", "/system/bin/truncate");
+symlink("toybox", "/system/bin/umount");
+symlink("toybox", "/system/bin/uname");
+symlink("toybox", "/system/bin/uniq");
+symlink("toybox", "/system/bin/unix2dos");
+symlink("toybox", "/system/bin/usleep");
+symlink("toybox", "/system/bin/vmstat");
+symlink("toybox", "/system/bin/wc");
+symlink("toybox", "/system/bin/which");
+symlink("toybox", "/system/bin/whoami");
+symlink("toybox", "/system/bin/xargs");
+symlink("toybox", "/system/bin/yes");
+symlink("/vendor/lib64/egl/libGLES_mali.so", "/system/vendor/lib64/hw/vulkan.exynos5.so");
+symlink("/vendor/lib64/egl/libGLES_mali.so", "/system/vendor/lib64/libOpenCL.so.1.1");
+symlink("/vendor/lib/egl/libGLES_mali.so", "/system/vendor/lib/hw/vulkan.exynos5.so");
+symlink("/vendor/lib/egl/libGLES_mali.so", "/system/vendor/lib/libOpenCL.so.1.1");
+set_progress(0.600000);
+ui_print("## Setting Permissions...");
+#PERM
+set_metadata_recursive("/system", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0644, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata_recursive("/system/bin", "uid", 0, "gid", 2000, "dmode", 0755, "fmode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/bin/androidshmservice", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:androidshmservice_exec:s0");
+set_metadata("/system/bin/apaservice", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:apaservice_exec:s0");
+set_metadata("/system/bin/app_process32", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:zygote_exec:s0");
+set_metadata("/system/bin/app_process64", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:zygote_exec:s0");
+set_metadata("/system/bin/argosd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:argosd_exec:s0");
+set_metadata("/system/bin/at_distributor", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:at_distributor_exec:s0");
+set_metadata("/system/bin/auditd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:auditd_exec:s0");
+set_metadata("/system/bin/bintvoutservice", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:bintvoutservice_exec:s0");
+set_metadata("/system/bin/blkid", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:blkid_exec:s0");
+set_metadata("/system/bin/bootanimation", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:bootanim_exec:s0");
+set_metadata("/system/bin/bootchecker", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:bootchecker_exec:s0");
+set_metadata("/system/bin/bugreport", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:bugreport_exec:s0");
+set_metadata("/system/bin/cellgeofenced", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:cellgeofenced_exec:s0");
+set_metadata("/system/bin/charon", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:charon_exec:s0");
+set_metadata("/system/bin/clatd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:clatd_exec:s0");
+set_metadata("/system/bin/connfwexe", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:connfwexe_exec:s0");
+set_metadata("/system/bin/cs", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:cs_exec:s0");
+set_metadata("/system/bin/ddexe", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:ddexe_exec:s0");
+set_metadata("/system/bin/debuggerd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:debuggerd_exec:s0");
+set_metadata("/system/bin/debuggerd64", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:debuggerd_exec:s0");
+set_metadata("/system/bin/dex2oat", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:dex2oat_exec:s0");
+set_metadata_recursive("/system/bin/dhcpcd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:dhcp_exec:s0");
+set_metadata("/system/bin/diagexe", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:diagexe_exec:s0");
+set_metadata("/system/bin/dnsmasq", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:dnsmasq_exec:s0");
+set_metadata("/system/bin/drmserver", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:drmserver_exec:s0");
+set_metadata("/system/bin/dumpstate", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:dumpstate_exec:s0");
+set_metadata("/system/bin/dumpsys", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:dumpsys_exec:s0");
+set_metadata("/system/bin/edmaudit", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:edmaudit_exec:s0");
+set_metadata("/system/bin/e2fsck", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:fsck_exec:s0");
+set_metadata("/system/bin/epmlogd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:epmlogd_exec:s0");
+set_metadata("/system/bin/exyrngd", "uid", 0, "gid", 2000, "mode", 0700, "capabilities", 0x0, "selabel", "u:object_r:exyrngd_exec:s0");
+set_metadata("/system/bin/fingerprintd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:fingerprintd_exec:s0");
+set_metadata("/system/bin/fsck.exfat", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:fsck_exec:s0");
+set_metadata("/system/bin/fsck.f2fs", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:fsck_exec:s0");
+set_metadata("/system/bin/fsck_msdos", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:fsck_exec:s0");
+set_metadata("/system/bin/gatekeeperd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:gatekeeperd_exec:s0");
+set_metadata("/system/bin/gpsd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:gpsd_exec:s0");
+set_metadata("/system/bin/hostapd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:hostapd_exec:s0");
+set_metadata("/system/bin/icd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:icd_exec:s0");
+set_metadata("/system/bin/install-recovery.sh", "uid", 0, "gid", 0, "mode", 0750, "capabilities", 0x0, "selabel", "u:object_r:install_recovery_exec:s0");
+set_metadata("/system/bin/installd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:installd_exec:s0");
+set_metadata("/system/bin/insthk", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:insthk_exec:s0");
+set_metadata("/system/bin/IPSecService", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:IPSecService_exec:s0");
+set_metadata("/system/bin/iptables", "uid", 0, "gid", 1000, "mode", 0750, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/bin/ip6tables", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/bin/jackservice", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:jackservice_exec:s0");
+set_metadata("/system/bin/keystore", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:keystore_exec:s0");
+set_metadata("/system/bin/lhd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:lhd_exec:s0");
+set_metadata("/system/bin/lmkd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:lmkd_exec:s0");
+set_metadata("/system/bin/logcat", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:logcat_exec:s0");
+set_metadata("/system/bin/logd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:logd_exec:s0");
+set_metadata("/system/bin/lpm", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:lpm_exec:s0");
+set_metadata("/system/bin/logwrapper", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/bin/macloader", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:macloader_exec:s0");
+set_metadata("/system/bin/make_ext4fs", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/bin/mcDriverDaemon", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:mobicoredaemon_exec:s0");
+set_metadata("/system/bin/mdnsd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:mdnsd_exec:s0");
+set_metadata("/system/bin/mediaserver", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:mediaserver_exec:s0");
+set_metadata("/system/bin/mfgloader", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:mfgloader_exec:s0");
+set_metadata("/system/bin/mkfs.exfat", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:fsck_exec:s0");
+set_metadata("/system/bin/mtpd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:mtp_exec:s0");
+set_metadata("/system/bin/ndc", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/bin/netd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:netd_exec:s0");
+set_metadata("/system/bin/npsmobex", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:mobexdaemon_exec:s0");
+set_metadata("/system/bin/olsrd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:olsrd_exec:s0");
+set_metadata("/system/bin/otp_server", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:otp_server_exec:s0");
+set_metadata("/system/bin/patchoat", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:dex2oat_exec:s0");
+set_metadata("/system/bin/ping", "uid", 0, "gid", 0, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/bin/pppd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:ppp_exec:s0");
+set_metadata("/system/bin/prepare_param.sh", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:prepare_param_sh_file:s0");
+set_metadata("/system/bin/racoon", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:racoon_exec:s0");
+set_metadata("/system/bin/resetreason", "uid", 1000, "gid", 1000, "mode", 0710, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/bin/rild", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:rild_exec:s0");
+set_metadata("/system/bin/rtc_log.sh", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:rtc_log_sh_file:s0");
+set_metadata("/system/bin/rpmbd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:rpmbd_exec:s0");
+set_metadata("/system/bin/run-as", "uid", 0, "gid", 2000, "mode", 0750, "capabilities", 0x0, "selabel", "u:object_r:runas_exec:s0");
+set_metadata("/system/bin/samsungpowersoundplay", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:samsungpowersoundplay_exec:s0");
+set_metadata("/system/bin/scs", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:scs_exec:s0");
+set_metadata("/system/bin/sdcard", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:sdcardd_exec:s0");
+set_metadata("/system/bin/sdp_cryptod", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:sdp_cryptod_exec:s0");
+set_metadata("/system/bin/secure_storage_daemon", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:secure_storage_exec:s0");
+set_metadata("/system/bin/sem_daemon", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:sem_exec:s0");
+set_metadata("/system/bin/sensorhubservice", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:sensorhubservice_exec:s0");
+set_metadata("/system/bin/servicemanager", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:servicemanager_exec:s0");
+set_metadata("/system/bin/sgdisk", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:sgdisk_exec:s0");
+set_metadata("/system/bin/sh", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:shell_exec:s0");
+set_metadata("/system/bin/smdexe", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:smdexe_exec:s0");
+set_metadata("/system/bin/ss_conn_daemon", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:ss_conn_daemon_exec:s0");
+set_metadata("/system/bin/ss_kbservice_daemon", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:ss_kbservice_daemon_exec:s0");
+set_metadata("/system/bin/surfaceflinger", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:surfaceflinger_exec:s0");
+set_metadata("/system/bin/tc", "uid", 0, "gid", 1000, "mode", 0750, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/bin/tima_dump_log", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:tima_dump_exec:s0");
+set_metadata("/system/bin/tlc_server", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:tlc_server_exec:s0");
+set_metadata("/system/bin/toolbox", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:toolbox_exec:s0");
+set_metadata("/system/bin/toybox", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:toolbox_exec:s0");
+set_metadata("/system/bin/tzdatacheck", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:tzdatacheck_exec:s0");
+set_metadata("/system/bin/uncrypt", "uid", 0, "gid", 0, "mode", 0750, "capabilities", 0x0, "selabel", "u:object_r:uncrypt_exec:s0");
+set_metadata("/system/bin/vdc", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:vdc_exec:s0");
+set_metadata("/system/bin/vold", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:vold_exec:s0");
+set_metadata("/system/bin/vpnclientd", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:vpnclientd_exec:s0");
+set_metadata("/system/bin/wlandutservice", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:wlandutservice_exec:s0");
+set_metadata("/system/bin/wpa_supplicant", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:wpa_exec:s0");
+set_metadata("/system/etc", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/etc/bluetooth", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/etc/bluetooth/auto_pair_devlist.conf", "uid", 0, "gid", 0, "mode", 0644, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/etc/bluetooth/bt_did.conf", "uid", 0, "gid", 0, "mode", 0644, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/etc/bluetooth/bt_stack.conf", "uid", 0, "gid", 0, "mode", 0644, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata_recursive("/system/etc/dhcpcd", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0644, "capabilities", 0x0, "selabel", "u:object_r:dhcp_system_file:s0");
+set_metadata("/system/etc/dhcpcd/dhcpcd-hooks", "uid", 0, "gid", 0, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/etc/dhcpcd/dhcpcd-run-hooks", "uid", 1014, "gid", 2000, "mode", 0550, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/recovery-from-boot.p", "uid", 0, "gid", 0, "mode", 0644, "capabilities", 0x0);
+set_metadata("/system/etc/event-log-tags", "uid", 0, "gid", 0, "mode", 0644, "capabilities", 0x0, "selabel", "u:object_r:event_log_tags_file:s0");
+set_metadata_recursive("/system/etc/firmware", "uid", 0, "gid", 2000, "dmode", 0755, "fmode", 0644, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/etc/init.goldfish.sh", "uid", 0, "gid", 2000, "mode", 0550, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/etc/init.sec.boot.sh", "uid", 0, "gid", 2000, "mode", 0550, "capabilities", 0x0, "selabel", "u:object_r:sec-sh_exec:s0");
+set_metadata("/system/etc/permissions", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata_recursive("/system/etc/ppp", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0555, "capabilities", "0x0", "selabel", "u:object_r:ppp_system_file:s0");
+set_metadata("/system/etc/security", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/etc/security/cacerts", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/etc/security/.drm", "uid", 0, "gid", 0, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:drm_security_system_file:s0");
+set_metadata_recursive("/system/lib", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0644, "capabilities", 0x0, "selabel", "u:object_r:system_library_file:s0");
+set_metadata_recursive("/system/vendor", "uid", 0, "gid", 2000, "dmode", 0755, "fmode", 0644, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/vendor/etc", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/vendor/etc/nxp", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/vendor/firmware", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/vendor/lib", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/vendor/lib/egl", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/vendor/firmware", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata_recursive("/system/vendor/lib/hw", "uid", 0, "gid", 2000, "dmode", 0755, "fmode", 0644, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata_recursive("/system/vendor/lib/mediadrm", "uid", 0, "gid", 2000, "dmode", 0755, "fmode", 0644, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/vendor/lib/mediadrm/libdrmclearkeyplugin.so", "uid", 0, "gid", 0, "mode", 0644, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/vendor/lib/mediadrm/libwvdrmengine.so", "uid", 0, "gid", 0, "mode", 0644, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/vendor/media", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata_recursive("/system/xbin", "uid", 0, "gid", 2000, "dmode", 0755, "fmode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+run_program("/system/xbin/busybox", "--install", "-s", "/system/xbin");
+set_metadata_recursive("/system/su.d", "uid", 0, "gid", 0, "dmode", 0700, "fmode", 0700, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_metadata("/system/xbin/dexdump", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
+set_progress(0.800000);
+ui_print("");
+
+ui_print("## Runing Ext4/Tune2fs optimization...");
+	package_extract_file("Efficient/tweaks/ext4/ext4", "/tmp/ext4");
+	package_extract_file("Efficient/tweaks/ext4/tune2fs", "/tmp/tune2fs");
+	set_perm(0, 0, 0777, "/tmp/ext4");
+	set_perm(0, 0, 0777, "/tmp/tune2fs");
+run_program("/tmp/ext4");
+
+#variant G930F
+if file_getprop("/tmp/aroma/kernel.prop","selected.1") == "1" then
+     ui_print("## Installing Efficient Kernel Stock+, launching the script...");
+	 package_extract_dir("Variant/G930F/system", "/system");
+     package_extract_file("kernel/g930f/boot.img", "/dev/block/platform/155a0000.ufs/by-name/BOOT");
+endif;
+
+#variant G935F
+if file_getprop("/tmp/aroma/kernel.prop","selected.1") == "2" then
+     ui_print("## Installing Efficient Kernel Stock+, launching the script...");
+	 package_extract_dir("Variant/G935F/system", "/system");
+	 package_extract_file("kernel/g935f/boot.img", "/dev/block/platform/155a0000.ufs/by-name/BOOT");
+endif;
+
+if file_getprop("/tmp/aroma/battery2.prop","selected.1") == "1" then
+	ui_print("## Enabling FastDormancy...");
+	package_extract_file("Efficient/tweaks/fastdormancy/fastdormancyon.sh", "/tmp/fastdormancyon.sh");
+	set_perm(0, 0, 0777, "/tmp/fastdormancyon.sh");
+	run_program("/sbin/busybox", "sh", "/tmp/fastdormancyon.sh");
+endif;
+
+if file_getprop("/tmp/aroma/battery2.prop","selected.1") == "2" then
+	ui_print("## Disabling FastDormancy...");
+	package_extract_file("Efficient/tweaks/fastdormancy/fastdormancyoff.sh", "/tmp/fastdormancyoff.sh");
+	set_perm(0, 0, 0777, "/tmp/fastdormancyoff.sh");
+	run_program("/sbin/busybox", "sh", "/tmp/fastdormancyoff.sh");
+endif;
+
+#Root 
+if file_getprop("/tmp/aroma/root.prop","selected.1") == "1" then
+	package_extract_dir("supersu", "/tmp/supersu");
+	run_program("/sbin/busybox", "unzip", "/tmp/supersu/supersu.zip", "META-INF/com/google/android/*", "-d", "/tmp/supersu");
+	run_program("/sbin/busybox", "sh", "/tmp/supersu/META-INF/com/google/android/update-binary", "dummy", "1", "/tmp/supersu/supersu.zip");
+endif;
+
+if file_getprop("/tmp/aroma/root.prop","selected.1") == "2" then
+	delete("/data/su.img");
+	package_extract_dir("magisk/app", "/system/app");
+	package_extract_dir("magisk", "/tmp/magisk");
+	run_program("/sbin/busybox", "unzip", "/tmp/magisk/magisk.zip", "META-INF/com/google/android/*", "-d", "/tmp/magisk");
+	run_program("/sbin/busybox", "sh", "/tmp/magisk/META-INF/com/google/android/update-binary", "dummy", "1", "/tmp/magisk/magisk.zip");
+endif;
+
+#Busybox
+if file_getprop("/tmp/aroma/root.prop","selected.1") == "1" then
+	package_extract_dir("busybox", "/tmp/busybox");
+	run_program("/sbin/busybox", "unzip", "/tmp/busybox/busybox.zip", "META-INF/com/google/android/*", "-d", "/tmp/busybox");
+	run_program("/sbin/busybox", "sh", "/tmp/busybox/META-INF/com/google/android/update-binary", "dummy", "1", "/tmp/busybox/busybox.zip");
+endif;
+
+if file_getprop("/tmp/aroma/root.prop","selected.1") == "2" then
+	package_extract_dir("busybox", "/tmp/busybox");
+	run_program("/sbin/busybox", "unzip", "/tmp/busybox/busyboxmagisk.zip", "META-INF/com/google/android/*", "-d", "/tmp/busybox");
+	run_program("/sbin/busybox", "sh", "/tmp/busybox/META-INF/com/google/android/update-binary", "dummy", "1", "/tmp/busybox/busyboxmagisk.zip");
+	
+endif;
+set_progress(0.800000);
+
+ui_print("## Cleaning...");
+delete_recursive("/tmp");
+delete_recursive("/cache");
+delete_recursive("/preload");
+delete_recursive("/data/dalvik-cache");
+set_progress(0.900000);
+unmount("/system");
+unmount("/data");
+unmount("/preload");
+unmount("/efs");
+set_progress(1.000000);
+ui_print("");
+ui_print("");
+ui_print("Efficient ROM is now installed. Please reboot.");
+ui_print("");
+ui_print("");

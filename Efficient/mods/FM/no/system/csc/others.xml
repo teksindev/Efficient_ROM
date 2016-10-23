@@ -1,0 +1,71 @@
+<?xml  version="1.0" encoding="UTF-8" ?>
+<SamsungMobileFeauture>
+  <Version>ED0001</Version>
+  <Country>UNITED KINGDOM</Country>
+  <CountryISO>GB</CountryISO>
+  <SalesCode>BTU</SalesCode>
+  <FeatureSet>
+    
+    <!-- Phone -->
+    <CscFeature_VoiceCall_EnableVmsNumberAsDefaultInCallForwarding>TRUE</CscFeature_VoiceCall_EnableVmsNumberAsDefaultInCallForwarding>
+    <CscFeature_VoiceCall_ConfigRecording>RecordingAllowed</CscFeature_VoiceCall_ConfigRecording>
+    
+    <!-- Web -->
+    <CscFeature_Web_EnableAutoSimHomeUrlInProfile>TRUE</CscFeature_Web_EnableAutoSimHomeUrlInProfile>
+    <CscFeature_Web_ConfigSyncSource>TRUE</CscFeature_Web_ConfigSyncSource>
+    
+    <!-- WiFi -->
+    <CscFeature_Wifi_UseDefaultSecurityAs>WPA2/PSK</CscFeature_Wifi_UseDefaultSecurityAs>
+    
+    <!-- Messages -->
+    <CscFeature_Message_ConfigFreeMessage>off</CscFeature_Message_ConfigFreeMessage>
+    <CscFeature_Message_DisableSmsToMmsConversionByTextInput>true</CscFeature_Message_DisableSmsToMmsConversionByTextInput>
+    <CscFeature_Message_EnableBlackList>true</CscFeature_Message_EnableBlackList>
+    <CscFeature_Message_EnableSaveRestoreSDCard>true </CscFeature_Message_EnableSaveRestoreSDCard>
+    
+    <!-- RIL -->
+    <CscFeature_RIL_SupportImsService>TRUE</CscFeature_RIL_SupportImsService>
+    <CscFeature_RIL_SupportVolte>TRUE</CscFeature_RIL_SupportVolte>
+    <CscFeature_RIL_SupportSrvcc>TRUE</CscFeature_RIL_SupportSrvcc>
+    <CscFeature_RIL_SrvccRel>10</CscFeature_RIL_SrvccRel>
+    <CscFeature_RIL_BlockUssdDuringVolteCall>TRUE</CscFeature_RIL_BlockUssdDuringVolteCall>
+    <CscFeature_RIL_UseMpsForImsSetting>TRUE</CscFeature_RIL_UseMpsForImsSetting>
+    <CscFeature_RIL_E911RoutingPolicy>auto</CscFeature_RIL_E911RoutingPolicy>
+    <CscFeature_RIL_ConfigAlwaysOnApn>ims,xcap</CscFeature_RIL_ConfigAlwaysOnApn>
+    <CscFeature_RIL_ConfigSpecialPdpFlag>im_cn</CscFeature_RIL_ConfigSpecialPdpFlag>
+    <CscFeature_RIL_SupportEpdg>true</CscFeature_RIL_SupportEpdg>
+    <CscFeature_RIL_SupportEpdgOnAirplaneMode>true</CscFeature_RIL_SupportEpdgOnAirplaneMode>
+        
+    <!-- IMS -->
+    <CscFeature_IMS_EnableIMS>TRUE</CscFeature_IMS_EnableIMS>
+    <CscFeature_IMS_EnableRCSe>false</CscFeature_IMS_EnableRCSe>
+    <CscFeature_IMS_EnableVoLTE>TRUE</CscFeature_IMS_EnableVoLTE>
+    <CscFeature_IMS_EnableLTEVideoCall>FALSE</CscFeature_IMS_EnableLTEVideoCall>
+    <CscFeature_IMS_EnableRCSPresence>false</CscFeature_IMS_EnableRCSPresence>
+    <CscFeature_IMS_FrameworkVersion>5.0</CscFeature_IMS_FrameworkVersion>
+    
+    <!-- Smartmanager -->
+    <CscFeature_SmartManager_ConfigDashboard>dual_dashboard</CscFeature_SmartManager_ConfigDashboard>
+    <CscFeature_SmartManager_DisableAntiMalware>true </CscFeature_SmartManager_DisableAntiMalware>
+    <CscFeature_SmartManager_ConfigSubFeatures>roguepopup|autoclean|autorestart|networkpowersaving|applock|rootbadgefeature|notificationmanager|applicationpermission</CscFeature_SmartManager_ConfigSubFeatures>
+    
+    <!-- SystemUI -->
+    <CscFeature_Setting_IncludeApn4SwUpdate>true</CscFeature_Setting_IncludeApn4SwUpdate>
+    <CscFeature_SystemUI_SupportRecentAppProtection>true</CscFeature_SystemUI_SupportRecentAppProtection>
+	  
+    <!-- Settings -->
+    <CscFeature_Setting_HideApnList>3hotspot,ims,IMS</CscFeature_Setting_HideApnList>
+    <CscFeature_Setting_IncludeApn4SwUpdate>true</CscFeature_Setting_IncludeApn4SwUpdate>
+	<CscFeature_Setting_EnableMenuBlockCallMsg>true</CscFeature_Setting_EnableMenuBlockCallMsg>
+	<CscFeature_Setting_DisableMenuSoftwareUpdate>true</CscFeature_Setting_DisableMenuSoftwareUpdate>
+	<CscFeature_Setting_SupportWifiCall>TRUE</CscFeature_Setting_SupportWifiCall>
+	
+	<!-- Camera -->
+	<CscFeature_Camera_ShutterSoundMenu>true</CscFeature_Camera_ShutterSoundMenu>
+    
+    <!-- Common -->
+    <CscFeature_Common_ConfigSvcProviderForUnknownNumber>whitepages,whitepages,off/234</CscFeature_Common_ConfigSvcProviderForUnknownNumber>
+    <CscFeature_Common_ConfigEmergencyModePackages>com.ipsec.service,com.sec.android.providers.iwlansettings,com.sec.android.providers.mapcon</CscFeature_Common_ConfigEmergencyModePackages>
+    
+  </FeatureSet>
+</SamsungMobileFeauture>
